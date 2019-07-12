@@ -22,8 +22,4 @@ public class GambleResult implements Serializable {
             messageList.add(message);
         }
     }
-
-    public void incrementRound() {
-        this.roundNumber++;
-    }
 }

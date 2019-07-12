@@ -10,9 +10,10 @@ import potgieter.game.models.PlayerModel;
 import javax.annotation.PostConstruct;
 import java.util.Map;
 
+import static potgieter.game.framework.Constants.KEY;
+
 public class RedisPlayerRepositoryImpl implements RedisRepository {
 
-    private static final String KEY = "Player";
 
     private RedisTemplate<String, Object> redisTemplate;
     private HashOperations hashOperations;
@@ -39,7 +40,6 @@ public class RedisPlayerRepositoryImpl implements RedisRepository {
         model.setRoundMode(((PlayerModel) obj).getRoundMode());
         model.setCoins(((PlayerModel) obj).getCoins());
         model.setGambleResult(((PlayerModel) obj).getGambleResult());
-        System.out.println("Persisting " + model);
         hashOperations.put(KEY, id, model);
     }
 
