@@ -5,6 +5,8 @@ import potgieter.game.models.PlayerModel;
 import potgieter.game.models.RoundModeEnum;
 import potgieter.game.util.Utils;
 
+import java.util.ArrayList;
+
 public class Gambler {
 
     private static final int BETTING_COST = 10;
@@ -29,33 +31,48 @@ public class Gambler {
     private void roll() {
         System.out.println("Player currently in mode: " + player.getRoundMode());
 
-        GambleResult result = player.getGambleResult();
+        GambleResult result = new GambleResult();
+        result.setRoundNumber(player.getGambleResult().size() + 1);
 
         if (player.getRoundMode() == RoundModeEnum.NORMAL) {
-            if (player.getCoins() >= BETTING_COST) {
-                deductCoins();
-                result.addMessage(BETTING_COST + " coins have been deducted");
-            } else {
-                result.addMessage("You have no coins left, which is impressive!");
-                return;
+            // infinite coins!
+            if (!hasCoins()) {
+                player.setCoins(1000000);
             }
+
+            deductCoins();
+            result.addMessage(BETTING_COST + " coins have been deducted");
         }
 
-        int randomWin = Utils.generateRandomPercentage();
-        System.out.println("Random Win: " + randomWin);
-        if (randomWin < WINNING_PERCENTAGE) {
+
+        if (isWin()) {
             result.addMessage("You win " + WIN_AMOUNT + " coins!");
             player.setCoins(player.getCoins() + WIN_AMOUNT);
+        } else {
+            result.addMessage("You win 0 coins");
         }
 
-        int randomFree = Utils.generateRandomPercentage();
-        System.out.println("Random Free: " + randomFree);
-        if (randomFree < FREE_PERCENTAGE) {
+        if (isFree()) {
             result.addMessage("Lucky! Next round is free!");
             player.setRoundMode(RoundModeEnum.FREE);
         } else {
             player.setRoundMode(RoundModeEnum.NORMAL);
         }
+
+
+        player.getGambleResult().add(result);
+    }
+
+    private boolean isFree() {
+        return Utils.generateRandomPercentage() < FREE_PERCENTAGE;
+    }
+
+    private boolean isWin() {
+        return Utils.generateRandomPercentage() < WINNING_PERCENTAGE;
+    }
+
+    private boolean hasCoins() {
+        return player.getCoins() >= BETTING_COST;
     }
 
     private void deductCoins() {

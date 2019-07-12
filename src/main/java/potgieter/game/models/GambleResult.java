@@ -1,16 +1,19 @@
 package potgieter.game.models;
 
 import lombok.Data;
+import org.springframework.data.redis.core.RedisHash;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
+@RedisHash("GambleResult")
 public class GambleResult implements Serializable {
+    private long roundNumber = 1;
     private List<String> messageList;
 
-    GambleResult() {
+    public GambleResult() {
         messageList = new ArrayList<>();
     }
 
@@ -18,5 +21,9 @@ public class GambleResult implements Serializable {
         if (messageList != null) {
             messageList.add(message);
         }
+    }
+
+    public void incrementRound() {
+        this.roundNumber++;
     }
 }

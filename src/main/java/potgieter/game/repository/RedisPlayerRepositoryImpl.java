@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import potgieter.game.interfaces.RedisRepository;
+import potgieter.game.models.GambleResult;
 import potgieter.game.models.PlayerModel;
 
 import javax.annotation.PostConstruct;
@@ -37,6 +38,7 @@ public class RedisPlayerRepositoryImpl implements RedisRepository {
         PlayerModel model = new PlayerModel();
         model.setRoundMode(((PlayerModel) obj).getRoundMode());
         model.setCoins(((PlayerModel) obj).getCoins());
+        model.setGambleResult(((PlayerModel) obj).getGambleResult());
         System.out.println("Persisting " + model);
         hashOperations.put(KEY, id, model);
     }
@@ -49,5 +51,16 @@ public class RedisPlayerRepositoryImpl implements RedisRepository {
     @Override
     public Object findPlayer(String id) {
         return hashOperations.get(KEY, id);
+    }
+
+    public GambleResult findPlayerRound(String id, String roundNumber) {
+        PlayerModel model = (PlayerModel) hashOperations.get(KEY, id);
+        for (GambleResult gambleResult : model.getGambleResult()) {
+            if (gambleResult.getRoundNumber() == Long.parseLong(roundNumber)) {
+                return gambleResult;
+            }
+        }
+
+        return null;
     }
 }

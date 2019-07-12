@@ -1,16 +1,15 @@
 package potgieter.game.util;
 
 import java.util.Random;
-import java.util.UUID;
 
 public class Utils {
 
+    /**
+     * Generate number between 0 and 100, simulating random percentage
+     * @return Integer between 0 and 100
+     */
     public static Integer generateRandomPercentage() {
-        return new Random().nextInt(100);
+        return new Random().nextInt(101);
     }
 
-    public static String generateUUID() {
-
-        return String.valueOf(UUID.randomUUID());
-    }
 }
